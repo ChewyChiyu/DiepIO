@@ -249,7 +249,7 @@ public class DiepPanel extends JPanel implements Runnable{
 			for(int index2 = Constants.mapY1; index2 <= Constants.mapY2; index2+=scale){
 				r.setLocation(index, index2);
 				if(currentScreen.contains(r)||currentScreen.intersects(r)){
-					g2d.drawRect(index, index2, scale, scale);
+					g2d.draw(r);
 					currentDraw++;
 				}
 			}
