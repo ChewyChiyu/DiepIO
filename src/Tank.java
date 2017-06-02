@@ -1,14 +1,17 @@
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.geom.AffineTransform;
 
 public class Tank extends GameObject{
-	static final double scale = 1;
-	static int W = (int) (Texture.basicBlue.getWidth()*scale);
-	static int H = (int) (Texture.basicBlue.getHeight()*scale);
+	
 	protected double angle = 0;
-	protected Tank(double x, double y) {
-		super(x, y, W, H);
+	protected TankType t;
+	
+	protected Tank(double x, double y, TankType t) {
+		super(x, y, t.img.getWidth(), t.img.getHeight());
+		//setting tank type
+		this.t = t;
+		
+		
 		Thread motion = new Thread(new Runnable(){
 			public void run(){
 				while(this!=null){
@@ -31,9 +34,9 @@ public class Tank extends GameObject{
 		AffineTransform a = g2d.getTransform();
 		g2d.translate(x, y);
 		g2d.rotate(angle);
-		g2d.drawImage(Texture.basicBlue, -W/2 ,-H/2, W, H, null);
+		g2d.drawImage(t.img, t.centerDX ,t.centerDY, W, H, null);
 		g2d.setTransform(a);
-		g.draw(bounds);
+		//g.draw(bounds);
 	}
 
 }

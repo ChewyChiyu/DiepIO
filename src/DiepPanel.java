@@ -18,7 +18,7 @@ public class DiepPanel extends JPanel implements Runnable{
 	boolean gameRun;
 	Thread game;
 	ArrayList<GameObject> sprites = new ArrayList<GameObject>();
-	Tank player = new Tank(Constants.screenW/2,Constants.screenH/2);
+	Tank player = new Tank(Constants.screenW/2,Constants.screenH/2,TankType.BASIC);
 
 	double renderX, renderY;
 	Rectangle currentScreen = new Rectangle((int)renderX,(int)renderY,Constants.screenW,Constants.screenH);
@@ -53,7 +53,7 @@ public class DiepPanel extends JPanel implements Runnable{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-					player.dx=-10;
+					player.dx=-player.speed;
 			}
 
 		});
@@ -61,7 +61,7 @@ public class DiepPanel extends JPanel implements Runnable{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-					player.dx=10;
+					player.dx=player.speed;
 			}
 
 		});
@@ -69,7 +69,7 @@ public class DiepPanel extends JPanel implements Runnable{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-					player.dy=-10;
+					player.dy=-player.speed;
 			}
 
 		});
@@ -77,7 +77,7 @@ public class DiepPanel extends JPanel implements Runnable{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-					player.dy=10;
+					player.dy=player.speed;
 			}
 
 		});
@@ -181,16 +181,16 @@ public class DiepPanel extends JPanel implements Runnable{
 				//bound check via map
 				
 					if(o.x-o.W/2 < Constants.mapX1){
-						o.x += 10;
+						o.x += o.speed;
 					}
 					if(o.x+o.W/2 > Constants.mapX2){
-						o.x -= 10;
+						o.x -= o.speed;
 					}
 					if(o.y-o.H/2 < Constants.mapY1){
-						o.y += 10;
+						o.y += o.speed;
 					}
 					if(o.y+o.H/2 > Constants.mapY2){
-						o.y -= 10;
+						o.y -= o.speed;
 					}
 				}
 			
@@ -244,7 +244,7 @@ public class DiepPanel extends JPanel implements Runnable{
 	void drawMap(Graphics2D g2d){
 		int scale = 250;
 		Rectangle r = new Rectangle();
-		r.setSize(250, 250);
+		r.setSize(scale, scale);
 		for(int index = Constants.mapX1; index <= Constants.mapX2; index+=scale){
 			for(int index2 = Constants.mapY1; index2 <= Constants.mapY2; index2+=scale){
 				r.setLocation(index, index2);
