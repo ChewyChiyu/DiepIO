@@ -6,9 +6,7 @@ public abstract class GameObject {
 	protected final int W,H;
 	
 	//changes
-	protected int speed;
-	
-	
+	protected int speed;	
 	protected Rectangle bounds;
 	
 	protected GameObject(double x, double y,int W , int H){
@@ -19,6 +17,8 @@ public abstract class GameObject {
 		speed = 5;
 		bounds = new Rectangle((int)x-W/2,(int)y-H/2,W,H);
 	}
+	
+	
 	abstract void draw(Graphics2D g);
 	Rectangle getBounds(){
 		bounds.setLocation((int)x-W/2, (int)y-W/2);

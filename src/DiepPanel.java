@@ -53,7 +53,8 @@ public class DiepPanel extends JPanel implements Runnable{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-					player.dx=-player.speed;
+				//player.dx=-player.speed;
+				player.A = true;
 			}
 
 		});
@@ -61,7 +62,8 @@ public class DiepPanel extends JPanel implements Runnable{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-					player.dx=player.speed;
+				//player.dx=player.speed;
+				player.D = true;
 			}
 
 		});
@@ -69,7 +71,8 @@ public class DiepPanel extends JPanel implements Runnable{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-					player.dy=-player.speed;
+				//player.dy=-player.speed;
+				player.W = true;
 			}
 
 		});
@@ -77,7 +80,8 @@ public class DiepPanel extends JPanel implements Runnable{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-					player.dy=player.speed;
+				//player.dy=player.speed;
+				player.S = true;
 			}
 
 		});
@@ -85,7 +89,8 @@ public class DiepPanel extends JPanel implements Runnable{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				player.dx=0;
+				//player.dx=0;
+				player.A = false;
 			}
 
 		});
@@ -93,7 +98,8 @@ public class DiepPanel extends JPanel implements Runnable{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				player.dx=0;
+				//player.dx=0;
+				player.D = false;
 			}
 
 		});
@@ -101,7 +107,8 @@ public class DiepPanel extends JPanel implements Runnable{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				player.dy=0;
+				//player.dy=0;
+				player.W = false;
 			}
 
 		});
@@ -109,10 +116,13 @@ public class DiepPanel extends JPanel implements Runnable{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				player.dy=0;
+				//player.dy=0;
+				player.S = false;
 			}
 
 		});
+
+
 
 	}
 	void panel(){
@@ -170,30 +180,34 @@ public class DiepPanel extends JPanel implements Runnable{
 	}
 
 	void update(){
+		updateAngle();
 		move();
 		boundCheck();
 		repaint();
+	}
+	void updateAngle(){
+	
 	}
 	void boundCheck(){
 		synchronized(sprites){
 			for(int index = 0; index < sprites.size(); index++){
 				GameObject o = sprites.get(index);
 				//bound check via map
-				
-					if(o.x-o.W/2 < Constants.mapX1){
-						o.x += o.speed;
-					}
-					if(o.x+o.W/2 > Constants.mapX2){
-						o.x -= o.speed;
-					}
-					if(o.y-o.H/2 < Constants.mapY1){
-						o.y += o.speed;
-					}
-					if(o.y+o.H/2 > Constants.mapY2){
-						o.y -= o.speed;
-					}
+
+				if(o.x-o.W/2 < Constants.mapX1){
+					o.x += o.speed;
 				}
-			
+				if(o.x+o.W/2 > Constants.mapX2){
+					o.x -= o.speed;
+				}
+				if(o.y-o.H/2 < Constants.mapY1){
+					o.y += o.speed;
+				}
+				if(o.y+o.H/2 > Constants.mapY2){
+					o.y -= o.speed;
+				}
+			}
+
 		}
 	}
 	void move(){
@@ -201,15 +215,15 @@ public class DiepPanel extends JPanel implements Runnable{
 			for(int index = 0; index < sprites.size(); index++){
 				//map edge check
 				GameObject o = sprites.get(index);
-					o.x+=sprites.get(index).dx;
-					o.y+=sprites.get(index).dy;
+				o.x+=sprites.get(index).dx;
+				o.y+=sprites.get(index).dy;
 			}
 		}
 	}
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-		
-		
+
+
 		Graphics2D g2d = (Graphics2D) g;
 		renderX = player.x-Constants.screenW/2;
 		renderY = player.y-Constants.screenH/2;
@@ -225,13 +239,13 @@ public class DiepPanel extends JPanel implements Runnable{
 		if(renderY+Constants.screenH>Constants.mapY2){
 			renderY = Constants.mapY2-Constants.screenH;
 		}
-		
-		
-		
+
+
+
 		//sets focus on player
-	
+
 		//makes sure player screen renders only the map
-		
+
 		g2d.translate(-renderX, -renderY);
 		currentDraw = 0;
 		currentScreen.setLocation((int)renderX, (int)renderY);
@@ -254,13 +268,13 @@ public class DiepPanel extends JPanel implements Runnable{
 				}
 			}
 		}
-		
-		
-		
+
+
+
 
 	}
 	void drawSprites(Graphics2D g2d){
-		
+
 		synchronized(sprites){
 			for(int index = 0; index < sprites.size(); index++){
 				//partial render
