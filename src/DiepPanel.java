@@ -5,6 +5,8 @@ import java.awt.MouseInfo;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
@@ -25,8 +27,8 @@ public class DiepPanel extends JPanel implements Runnable{
 	
 	boolean gameRun;
 	Thread game;
-	ArrayList<GameObject> sprites = new ArrayList<GameObject>();
-	Tank player = new Tank(Constants.screenW/2,Constants.screenH/2,TankType.BASIC);
+	static ArrayList<GameObject> sprites = new ArrayList<GameObject>();
+	Tank player = new Tank(Constants.screenW/2,Constants.screenH/2,TankType.BASIC, 1f);
 
 	double renderX, renderY;
 	Rectangle currentScreen = new Rectangle((int)renderX,(int)renderY,Constants.screenW,Constants.screenH);
@@ -129,7 +131,35 @@ public class DiepPanel extends JPanel implements Runnable{
 			}
 
 		});
+		addMouseListener(new MouseListener(){
 
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				player.shoot();
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
 
 
 	}
@@ -196,11 +226,11 @@ public class DiepPanel extends JPanel implements Runnable{
 	void updateAngle(){
 		mouseX = (int) (MouseInfo.getPointerInfo().getLocation().x +  renderX);
 		mouseY = (int) (MouseInfo.getPointerInfo().getLocation().y + renderY );
-		 double angle = Math.atan2((player.x - mouseX ), (player.y - mouseY)) * 180 / Math.PI;
+		 double angle = Math.atan2((player.x - mouseX ), (player.y - mouseY));
 		    if (angle < 0) {
-		         angle+=360;
+		         angle+=Math.PI*2;
 		    }
-		 player.angle = Math.toRadians(-angle) - Math.PI/2;
+		 player.angle =(-angle) - Math.PI/2;
 		 
 		
 	}
@@ -209,18 +239,30 @@ public class DiepPanel extends JPanel implements Runnable{
 			for(int index = 0; index < sprites.size(); index++){
 				GameObject o = sprites.get(index);
 				//bound check via map
-
+				boolean shouldRemove = false;
 				if(o.x-o.W/2 < Constants.mapX1){
 					o.x += o.speed;
+					shouldRemove = true;
 				}
 				if(o.x+o.W/2 > Constants.mapX2){
 					o.x -= o.speed;
+					shouldRemove = true;
+
 				}
 				if(o.y-o.H/2 < Constants.mapY1){
 					o.y += o.speed;
+					shouldRemove = true;
+
 				}
 				if(o.y+o.H/2 > Constants.mapY2){
 					o.y -= o.speed;
+					shouldRemove = true;
+				}
+				if(o instanceof Projectile){
+					if(shouldRemove){
+						sprites.remove(o);
+						System.out.println("removing");
+					}
 				}
 			}
 
@@ -269,7 +311,6 @@ public class DiepPanel extends JPanel implements Runnable{
 		drawMap(g2d);
 		drawSprites(g2d);
 		drawInfo(g2d);
-		g2d.drawLine((int)player.x, (int)player.y, mouseX, mouseY);
 
 	}
 	void drawMap(Graphics2D g2d){

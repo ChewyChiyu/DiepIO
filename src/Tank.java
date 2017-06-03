@@ -4,16 +4,17 @@ import java.awt.geom.AffineTransform;
 public class Tank extends GameObject{
 	
 	protected double angle = 0;
+	protected float id;
 	protected TankType t;
 	
 	
 	protected boolean A,W,S,D;
 	
-	protected Tank(double x, double y, TankType t) {
+	protected Tank(double x, double y, TankType t, float id) {
 		super(x, y, t.img.getWidth(), t.img.getHeight());
 		//setting tank type
 		this.t = t;
-		
+		this.id = id;
 		
 		Thread motion = new Thread(new Runnable(){
 			public void run(){
@@ -60,6 +61,10 @@ public class Tank extends GameObject{
 	}
 	void change(TankType t){
 		this.t = t;
+	}
+	void shoot(){
+		//shoots from center of tank
+		DiepPanel.sprites.add(new Projectile(x+Math.cos(angle)*super.W, y+Math.sin(angle)*super.H, Math.cos(angle)*10, Math.sin(angle)*10, 15, id));
 	}
 	@Override
 	void draw(Graphics2D g) {
