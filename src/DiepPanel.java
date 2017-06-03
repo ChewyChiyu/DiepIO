@@ -240,28 +240,27 @@ public class DiepPanel extends JPanel implements Runnable{
 				GameObject o = sprites.get(index);
 				//bound check via map
 				boolean shouldRemove = false;
-				if(o.x-o.W/2 < Constants.mapX1){
+				if(o.x-o.W/2 < Constants.map.x){
 					o.x += o.speed;
 					shouldRemove = true;
 				}
-				if(o.x+o.W/2 > Constants.mapX2){
+				if(o.x+o.W/2 > Constants.map.x + Constants.map.width){
 					o.x -= o.speed;
 					shouldRemove = true;
 
 				}
-				if(o.y-o.H/2 < Constants.mapY1){
+				if(o.y-o.H/2 < Constants.map.y){
 					o.y += o.speed;
 					shouldRemove = true;
 
 				}
-				if(o.y+o.H/2 > Constants.mapY2){
+				if(o.y+o.H/2 > Constants.map.y + Constants.map.height){
 					o.y -= o.speed;
 					shouldRemove = true;
 				}
 				if(o instanceof Projectile){
 					if(shouldRemove){
 						sprites.remove(o);
-						System.out.println("removing");
 					}
 				}
 			}
@@ -285,17 +284,17 @@ public class DiepPanel extends JPanel implements Runnable{
 		Graphics2D g2d = (Graphics2D) g;
 		renderX = player.x-Constants.screenW/2;
 		renderY = player.y-Constants.screenH/2;
-		if(renderX<Constants.mapX1){
-			renderX = Constants.mapX1;
+		if(renderX<Constants.map.x){
+			renderX = Constants.map.x;
 		}
-		if(renderY<Constants.mapY1){
-			renderY = Constants.mapY1;
+		if(renderY<Constants.map.y){
+			renderY = Constants.map.y;
 		}
-		if(renderX+Constants.screenW>Constants.mapX2){
-			renderX = Constants.mapX2-Constants.screenW;
+		if(renderX+Constants.screenW>Constants.map.x + Constants.map.width){
+			renderX = Constants.map.x + Constants.map.width-Constants.screenW;
 		}
-		if(renderY+Constants.screenH>Constants.mapY2){
-			renderY = Constants.mapY2-Constants.screenH;
+		if(renderY+Constants.screenH>Constants.map.y + Constants.map.height){
+			renderY = Constants.map.y + Constants.map.height-Constants.screenH;
 		}
 
 
@@ -309,16 +308,24 @@ public class DiepPanel extends JPanel implements Runnable{
 		currentScreen.setLocation((int)renderX, (int)renderY);
 		(g2d).draw(Constants.map);
 		drawMap(g2d);
+		drawMiniMap(g2d);
 		drawSprites(g2d);
 		drawInfo(g2d);
 
+	}
+	void drawMiniMap(Graphics2D g2d){
+		int scale = 15;
+		//scale down map
+		g2d.drawRect((int)renderX+scale,(int)renderY+ scale, Constants.map.width/scale ,Constants.map.height/scale);
+		//scaled down screen
+		g2d.drawRect((int)renderX+scale +  ( currentScreen.x - Constants.map.x )/scale, (int)renderY + scale + ( currentScreen.y - Constants.map.y )/scale, currentScreen.width/scale, currentScreen.height/scale);
 	}
 	void drawMap(Graphics2D g2d){
 		int scale = 250;
 		Rectangle r = new Rectangle();
 		r.setSize(scale, scale);
-		for(int index = Constants.mapX1; index <= Constants.mapX2; index+=scale){
-			for(int index2 = Constants.mapY1; index2 <= Constants.mapY2; index2+=scale){
+		for(int index = Constants.map.x; index <= Constants.map.x + Constants.map.width; index+=scale){
+			for(int index2 = Constants.map.y; index2 <= Constants.map.y + Constants.map.height; index2+=scale){
 				r.setLocation(index, index2);
 				if(currentScreen.contains(r)||currentScreen.intersects(r)){
 					g2d.draw(r);
@@ -346,10 +353,10 @@ public class DiepPanel extends JPanel implements Runnable{
 	}
 	void drawInfo(Graphics g){
 		g.setFont(Constants.font);
-		g.drawString("FPS: "+currentFPS, (int)renderX, (int)renderY+25);
-		g.drawString("Drawn Currently : " + currentDraw, (int)renderX, (int)renderY+50);
-		g.drawString("renderX " + (int)renderX + " renderY"+  (int)renderY  , (int)renderX, (int)renderY+75) ;
-		g.drawString("mouseX " + (int)mouseX + " mouseY"+  (int)mouseY  , (int)renderX, (int)renderY+100) ;
+		g.drawString("FPS: "+currentFPS, (int)renderX, (int)renderY+300);
+		g.drawString("Drawn Currently : " + currentDraw, (int)renderX, (int)renderY+325);
+		g.drawString("renderX " + (int)renderX + " renderY"+  (int)renderY  , (int)renderX, (int)renderY+350) ;
+		g.drawString("mouseX " + (int)mouseX + " mouseY"+  (int)mouseY  , (int)renderX, (int)renderY+375) ;
 
 	}
 }
