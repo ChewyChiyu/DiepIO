@@ -1,6 +1,7 @@
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.MouseInfo;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -15,6 +16,13 @@ import javax.swing.KeyStroke;
 public class DiepPanel extends JPanel implements Runnable{
 	int currentFPS = 0;
 	int currentDraw = 0;
+	
+	
+	int mouseX = 0;
+	int mouseY = 0;
+	
+	
+	
 	boolean gameRun;
 	Thread game;
 	ArrayList<GameObject> sprites = new ArrayList<GameObject>();
@@ -186,7 +194,15 @@ public class DiepPanel extends JPanel implements Runnable{
 		repaint();
 	}
 	void updateAngle(){
-	
+		mouseX = (int) (MouseInfo.getPointerInfo().getLocation().x +  renderX);
+		mouseY = (int) (MouseInfo.getPointerInfo().getLocation().y + renderY );
+		 double angle = Math.atan2((player.x - mouseX ), (player.y - mouseY)) * 180 / Math.PI;
+		    if (angle < 0) {
+		         angle+=360;
+		    }
+		 player.angle = Math.toRadians(-angle) - Math.PI/2;
+		 
+		
 	}
 	void boundCheck(){
 		synchronized(sprites){
@@ -253,6 +269,7 @@ public class DiepPanel extends JPanel implements Runnable{
 		drawMap(g2d);
 		drawSprites(g2d);
 		drawInfo(g2d);
+		g2d.drawLine((int)player.x, (int)player.y, mouseX, mouseY);
 
 	}
 	void drawMap(Graphics2D g2d){
@@ -291,5 +308,7 @@ public class DiepPanel extends JPanel implements Runnable{
 		g.drawString("FPS: "+currentFPS, (int)renderX, (int)renderY+25);
 		g.drawString("Drawn Currently : " + currentDraw, (int)renderX, (int)renderY+50);
 		g.drawString("renderX " + (int)renderX + " renderY"+  (int)renderY  , (int)renderX, (int)renderY+75) ;
+		g.drawString("mouseX " + (int)mouseX + " mouseY"+  (int)mouseY  , (int)renderX, (int)renderY+100) ;
+
 	}
 }

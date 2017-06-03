@@ -58,7 +58,9 @@ public class Tank extends GameObject{
 		});
 		motion.start();
 	}
-
+	void change(TankType t){
+		this.t = t;
+	}
 	@Override
 	void draw(Graphics2D g) {
 		Graphics2D g2d = (Graphics2D) g;
